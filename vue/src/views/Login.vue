@@ -1,5 +1,6 @@
 <template>
-  <div>
+
+  <div edi>
     <div style="width: 400px; margin: 200px auto;">
       <h1 style="text-align: center; margin-bottom: 30px">登 录</h1>
       <el-form :model="user" :rules="rules" ref="ruleFormRef" size="large">
@@ -22,6 +23,7 @@ import {ref, reactive, getCurrentInstance} from 'vue'
 import {User, Lock} from '@element-plus/icons-vue'
 import {ElMessage, ElNotification } from "element-plus";
 import request from "../request";
+import router from "../../router";
 
 const { proxy } = getCurrentInstance()
 
@@ -40,19 +42,21 @@ const login = () => {
   proxy.$refs.ruleFormRef.validate((valid) => {
     if(valid) {
       // Promise
-      // 往后台发请求 http://localhost:9090    /user/login
+      // 往后台发请求 http://localhost:8080   /user/login
       // 后台数据格式：{"code": "200", "msg": "", "data": null}
       request.post('/user/login', user).then(res => {
-        if (res.code === '200') { // 请求成功
+        console.log(res.reason)
+        if (res.code===200) { // 请求成功
           ElNotification({
             type: 'success',
-            message: '登录成功'
+            message: "登入成功"
           })
           router.push('/')
         } else {  // 请求失败
           ElNotification({
             type: 'error',
-            message: res.msg
+            message: res.reason
+
           })
         }
       })

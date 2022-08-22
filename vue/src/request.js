@@ -1,7 +1,8 @@
 import axios from 'axios'
+import {ElNotification} from "element-plus";
 
 const request = axios.create({
-    baseURL: '/api',  // 注意！！ 这里是全局统一加上了 '/api' 前缀，也就是说所有接口都会加上'/api'前缀在，页面里面写接口的时候就不要加 '/api'了，否则会出现2个'/api'，类似 '/api/api/user'这样的报错，切记！！！
+    baseURL: 'http://localhost:8080',  // 注意！！ 这里是全局统一加上了 '/api' 前缀，也就是说所有接口都会加上'/api'前缀在，页面里面写接口的时候就不要加 '/api'了，否则会出现2个'/api'，类似 '/api/api/user'这样的报错，切记！！！
     timeout: 5000
 })
 
@@ -33,10 +34,15 @@ request.interceptors.response.use(
         return res;
     },
     error => {
-        console.log('err' + error) // for debug
+        console.log(error) // for debug
+        if(error.response.status !== 200) {
+            ElNotification({
+                type: 'error',
+                message: '接口异常'
+            })
+        }
         return Promise.reject(error)
     }
 )
-
 
 export default request
