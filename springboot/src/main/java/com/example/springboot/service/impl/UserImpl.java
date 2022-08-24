@@ -1,5 +1,6 @@
 package com.example.springboot.service.impl;
 
+import com.example.springboot.entity.DTO.UserQueryDTO;
 import com.example.springboot.entity.User;
 import com.example.springboot.mapper.MainMapper;
 import com.example.springboot.service.UserService;
@@ -43,5 +44,10 @@ public class UserImpl implements UserService{
     @Override
     public void deleteUser(int id) {
         mapper.deleteUser(id);
+    }
+
+    @Override
+    public List<User> pageUser(UserQueryDTO userQueryDTO) {
+       return mapper.pageUser(userQueryDTO);
     }
 }

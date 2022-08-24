@@ -1,8 +1,11 @@
 package com.example.springboot.controller;
 
+import com.example.springboot.entity.DTO.UserQueryDTO;
 import com.example.springboot.entity.User;
 import com.example.springboot.entity.resp.RestBean;
 import com.example.springboot.service.UserService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -35,10 +38,25 @@ public class MainController {
         }
     }
 
-    @GetMapping
-    public RestBean<List<User>> getUserData(){
-           List<User> allUser= service.getAllUserData();
-        return new RestBean<>(200, "获取成功", allUser);
+    @GetMapping("/page")
+    public RestBean<PageInfo<User>> getUserData(UserQueryDTO userQueryDTO){
+        Integer currentPage = userQueryDTO.getCurrentPage();
+        Integer pageSize = userQueryDTO.getPageSize();
+
+//        Integer pageNum = (currentPage - 1) * pageSize;
+//        userQueryDTO.setPageNum(pageNum);
+
+//        List<User> users = userDao.findPage(userQueryDTO);
+//        long total = userDao.count(userQueryDTO);
+
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("data", users);
+//        map.put("total", total);
+
+        // 使用 pageHelper
+        PageHelper.startPage(currentPage, pageSize);
+        List<User> users = service.pageUser(userQueryDTO);
+        return new RestBean<>(200,"分页成功",new PageInfo<>(users));
     }
 
     @RequestMapping(value = "/addUser" ,method = RequestMethod.POST)

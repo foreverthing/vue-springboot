@@ -1,5 +1,6 @@
 package com.example.springboot.mapper;
 
+import com.example.springboot.entity.DTO.UserQueryDTO;
 import com.example.springboot.entity.User;
 import org.apache.ibatis.annotations.*;
 
@@ -26,4 +27,20 @@ public interface MainMapper {
     @Delete("delete  from account where id =#{id}")
     void deleteUser(int id);
 //    @Param("username") String username ,@Param("password") String password,@Param("id") int id
+   @Select("<script>"+
+         "  SELECT * from account"
+          +" <where>"
+          + "<if test='username != null '>"
+          +" and username like concat('%', #{username}, '%')"
+           +"</if>"
+          + "<if test='email != null '>"
+          +"and email like concat('%', #{email}, '%')"
+          +"</if>"
+          +" </where>"
+          +"</script>")
+    List<User> pageUser(UserQueryDTO userQueryDTO);
+
+
+
+
 }
